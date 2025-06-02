@@ -1,39 +1,36 @@
 import asyncio
 import os
+import sys
 import torch
+import inspect
 from ultralytics import YOLO
-import ultralytics.nn.tasks
-import ultralytics.nn.modules.conv
-import ultralytics.nn.modules.block  # ← tambahkan ini
-import torch.nn.modules.container
-import torch.nn.modules.conv
-import torch.nn.modules.batchnorm
-import torch.nn.modules.activation
+import ultralytics.nn
+import torch.nn
 
 def load_yolov8_model():
-    import sys
+    # Buat atau ambil event loop (untuk kompatibilitas Python 3.12)
     try:
         if sys.version_info >= (3, 12):
             try:
-                asyncio.get_running_loop()
+                loop = asyncio.get_running_loop()
             except RuntimeError:
-                asyncio.set_event_loop(asyncio.new_event_loop())
+                loop = asyncio.new_event_loop()
+                asyncio.set_event_loop(loop)
         else:
             asyncio.get_running_loop()
     except RuntimeError:
-        asyncio.set_event_loop(asyncio.new_event_loop())
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
 
-    torch.serialization.add_safe_globals([
-        ultralytics.nn.tasks.DetectionModel,
-        ultralytics.nn.modules.conv.Conv,
-        ultralytics.nn.modules.block.C2f,  # ← tambah ini!
-        torch.nn.modules.container.Sequential,
-        torch.nn.modules.activation.SiLU,
-        torch.nn.modules.activation.ReLU,
-        torch.nn.modules.conv.Conv2d,
-        torch.nn.modules.batchnorm.BatchNorm2d,
-    ])
+    # Whitelist semua class dari ultralytics.nn dan torch.nn.modules.*
+    safe_classes = []
+    for module in [ultralytics.nn, torch.nn.modules]:
+        for _, obj in inspect.getmembers(module, inspect.isclass):
+            safe_classes.append(obj)
 
+    torch.serialization.add_safe_globals(safe_classes)
+
+    # Load model
     model_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "Modelterbaik.pt")
     model = YOLO(model_path)
     return model
