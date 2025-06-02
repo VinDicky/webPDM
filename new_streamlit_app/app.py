@@ -3,11 +3,6 @@ import tempfile
 import os
 from processor import process_video
 import time
-import cv2
-
-st.title("OpenCV Test")
-st.write("OpenCV version:", cv2.__version__)
-
 
 # Set custom favicon
 st.set_page_config(page_title="Vehicle Counting", page_icon="new_streamlit_app/yolov8.png")
