@@ -3,7 +3,8 @@ import os
 import torch
 from ultralytics import YOLO
 import ultralytics.nn.tasks
-import torch.nn.modules.container  # <- untuk Sequential
+import ultralytics.nn.modules.conv  # ← Tambahkan ini
+import torch.nn.modules.container   # ← Untuk Sequential
 
 def load_yolov8_model():
     import sys
@@ -18,9 +19,10 @@ def load_yolov8_model():
     except RuntimeError:
         asyncio.set_event_loop(asyncio.new_event_loop())
 
-    # Allowlist semua class yang dibutuhkan untuk load model
+    # Allowlist semua class yang diperlukan oleh PyTorch 2.6+
     torch.serialization.add_safe_globals([
         ultralytics.nn.tasks.DetectionModel,
+        ultralytics.nn.modules.conv.Conv,
         torch.nn.modules.container.Sequential,
     ])
 
