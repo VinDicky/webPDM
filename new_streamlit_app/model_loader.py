@@ -22,12 +22,13 @@ def load_yolov8_model():
     from torch.serialization import add_safe_globals
     from ultralytics.nn.modules.conv import Conv, Concat
     from ultralytics.nn.modules.block import C2f, Bottleneck, SPPF
+    from ultralytics.nn.modules.head import Detect
     from torch.nn import BatchNorm2d
     from torch.nn.modules.conv import Conv2d
     from torch.nn.modules.container import ModuleList
 
-    add_safe_globals([Conv, Concat, C2f, Bottleneck, SPPF, BatchNorm2d, Conv2d, ModuleList])
-
+    # Tambahkan semua class yang perlu di-allowlist supaya bisa di-load
+    add_safe_globals([Conv, Concat, C2f, Bottleneck, SPPF, Detect, BatchNorm2d, Conv2d, ModuleList])
 
     model_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "Modelterbaik.pt")
     model = YOLO(model_path)
