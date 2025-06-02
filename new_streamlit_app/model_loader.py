@@ -2,7 +2,8 @@ import asyncio
 import os
 import torch
 from ultralytics import YOLO
-import ultralytics.nn.tasks  # penting agar kelas DetectionModel dikenali
+import ultralytics.nn.tasks
+import torch.nn.modules.container  # <- untuk Sequential
 
 def load_yolov8_model():
     import sys
@@ -17,11 +18,12 @@ def load_yolov8_model():
     except RuntimeError:
         asyncio.set_event_loop(asyncio.new_event_loop())
 
-    # Allowlist DetectionModel untuk menghindari PyTorch deserialization error
-    torch.serialization.add_safe_globals([ultralytics.nn.tasks.DetectionModel])
+    # Allowlist semua class yang dibutuhkan untuk load model
+    torch.serialization.add_safe_globals([
+        ultralytics.nn.tasks.DetectionModel,
+        torch.nn.modules.container.Sequential,
+    ])
 
     model_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "Modelterbaik.pt")
-    
-    # Tetap load model seperti biasa (tanpa weights_only)
     model = YOLO(model_path)
     return model
