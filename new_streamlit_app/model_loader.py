@@ -28,6 +28,6 @@ def load_yolov8_model():
 
     add_safe_globals([Conv, Concat, C2f, Bottleneck, SPPF, DFL, Detect, BatchNorm2d, Conv2d, ModuleList])
 
-    model_path = os.path.join(os.path.dirname(os.path.abspath(_file_)), "Modelterbaik.pt")
+    model_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "Modelterbaik.pt")
     model = YOLO(model_path)
     return model
