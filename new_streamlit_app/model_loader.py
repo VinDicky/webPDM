@@ -26,13 +26,15 @@ def load_yolov8_model():
     from torch.nn import BatchNorm2d, Sequential, SiLU
     from torch.nn.modules.conv import Conv2d
     from torch.nn.modules.container import ModuleList
-    from torch.nn.modules.pooling import MaxPool2d  # <-- impor ini juga
+    from torch.nn.modules.pooling import MaxPool2d
+    from torch.nn.modules.upsampling import Upsample  # <-- import Upsample juga
 
     add_safe_globals([
         DetectionModel, Conv, Concat, C2f, Bottleneck,
         SPPF, DFL, Detect, BatchNorm2d, Conv2d,
         ModuleList, Sequential, SiLU,
-        MaxPool2d  # <-- tambahkan di sini
+        MaxPool2d,
+        Upsample  # <-- masukkan di sini
     ])
 
     model_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "Modelterbaik.pt")
