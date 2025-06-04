@@ -1,11 +1,11 @@
 import os
 import sys
 import asyncio
+import torch
 from ultralytics import YOLO
 
 def load_yolov8_model():
     try:
-        # Setup asyncio event loop untuk Python >= 3.12
         if sys.version_info >= (3, 12):
             try:
                 loop = asyncio.get_running_loop()
@@ -28,9 +28,6 @@ def load_yolov8_model():
 
     add_safe_globals([Conv, Concat, C2f, Bottleneck, SPPF, DFL, Detect, BatchNorm2d, Conv2d, ModuleList])
 
-    model_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "Modelterbaik.pt")
-
-    # Load YOLOv8 model
+    model_path = os.path.join(os.path.dirname(os.path.abspath(_file_)), "Modelterbaik.pt")
     model = YOLO(model_path)
-
     return model
