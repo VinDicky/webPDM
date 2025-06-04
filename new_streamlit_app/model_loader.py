@@ -5,6 +5,7 @@ import torch
 from ultralytics import YOLO
 
 def load_yolov8_model():
+    # Pastikan event loop asyncio aktif (khusus Python 3.12+ ada perubahan)
     try:
         if sys.version_info >= (3, 12):
             try:
@@ -18,6 +19,7 @@ def load_yolov8_model():
         loop = asyncio.new_event_loop()
         asyncio.set_event_loop(loop)
 
+    # Import kelas-kelas penting dari ultralytics dan PyTorch
     from torch.serialization import add_safe_globals
     from ultralytics.nn.tasks import DetectionModel
     from ultralytics.nn.modules.conv import Conv, Concat
@@ -27,12 +29,16 @@ def load_yolov8_model():
     from torch.nn.modules.conv import Conv2d
     from torch.nn.modules.container import ModuleList
 
+    # Izinkan kelas-kelas ini saat memuat checkpoint
     add_safe_globals([
         DetectionModel, Conv, Concat, C2f, Bottleneck,
         SPPF, DFL, Detect, BatchNorm2d, Conv2d,
-        ModuleList, Sequential, SiLU  # ⬅ Penting!
+        ModuleList, Sequential, SiLU
     ])
 
+    # Tentukan path model secara dinamis
     model_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "Modelterbaik.pt")
+    
+    # Load model YOLOv8 dengan path model
     model = YOLO(model_path)
     return model
